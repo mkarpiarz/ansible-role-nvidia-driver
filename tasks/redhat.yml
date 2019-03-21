@@ -1,0 +1,37 @@
+---
+
+- name: Install development libraries and headers
+  yum:
+    name: "{{ item }}"
+    state: present
+  with_items:
+    - kernel-devel
+    - kernel-headers
+
+# TODO: Use the new syntax instead:
+#  yum:
+#    name:
+#      - kernel-devel
+#      - kernel-headers
+#    state: present
+
+- name: Install NVIDIA graphics driver {{ nvidia_driver_package_name }}
+  yum:
+    name: "{{ nvidia_driver_package_name }}-{{ nvidia_driver_version }}*"
+    state: present
+
+# For example `nvidia_driver_package_name: nvidia-driver`
+- name: Make sure NVIDIA CUDA runtime library is installed if not installing cuda-drivers
+  yum:
+    name: "{{ nvidia_driver_package_name }}-cuda-{{ nvidia_driver_version }}*"
+    state: present
+  when: not ansible_check_mode and nvidia_driver_package_name != "cuda-drivers"
+
+# TODO: Add an option allowing to update the operating system?
+
+#- name: disable nonveau, opensource version of NVIDIA graphics driver
+#  lineinfile:
+#    dest: /etc/default/grub
+#    line: 'GRUB_CMDLINE_LINUX_DEFAULT="$GRUB_CMDLINE_LINUX_DEFAULT nouveau.modeset=0"'
+#    validate: 'sh -n %s'
+#    create: yes
