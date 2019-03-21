@@ -4,6 +4,11 @@
   import_tasks: debian.yml
   when: ansible_os_family == "Debian"
 
+- name: Fail if nvidia_driver_repo is not set to nvidia for RedHat derivatives
+  fail:
+    msg: "'nvidia_driver_repo' can only be set to 'nvidia' for RedHat derivatives"
+  when: ansible_os_family == "RedHat" and nvidia_driver_repo != 'nvidia'
+
 - name: import task for RedHat derivatives
   import_tasks: redhat.yml
   when: ansible_os_family == "RedHat"
