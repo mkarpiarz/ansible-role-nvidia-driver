@@ -1,19 +1,5 @@
 ---
-
-- name: Install development libraries and headers
-  yum:
-    name: "{{ item }}"
-    state: present
-  with_items:
-    - kernel-devel
-    - kernel-headers
-
-# TODO: Use the new syntax instead:
-#  yum:
-#    name:
-#      - kernel-devel
-#      - kernel-headers
-#    state: present
+# TODO: Check if kernel version and the version of kernel-headers and kernel-devel are the same
 
 - name: Install NVIDIA graphics driver {{ nvidia_driver_package_name }}
   yum:
